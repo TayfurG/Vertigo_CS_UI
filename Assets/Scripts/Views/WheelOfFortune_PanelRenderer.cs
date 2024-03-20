@@ -12,9 +12,10 @@ namespace Views
     public class WheelOfFortune_PanelRenderer : MonoBehaviour
     {
         [SerializeField] private PanelItem_Renderer _panelItemPrefab;
-        [SerializeField] private Button _exitButton;
         [SerializeField] private RectTransform _panelItemsParent;
-
+        
+        [SerializeField][HideInInspector] private Button _exitButton;
+        
         private WheelOfFortune_Model model;
 
         private Dictionary<WheelOfFortune_Item_Data, PanelItem_Renderer> _panelItemRenderers =
@@ -96,19 +97,23 @@ namespace Views
 
         private void Start()
         {
+            _exitButton.onClick.AddListener(OnExitClick);
+
             model.OnSpinTheWheel += OnSpinTheWheel;
             model.OnCanSpinAgain += OnCanSpinAgain;
         }
 
         private void OnDestroy()
         {
+            _exitButton.onClick.RemoveListener(OnExitClick);
+
             model.OnSpinTheWheel -= OnSpinTheWheel;
             model.OnCanSpinAgain -= OnCanSpinAgain;
         }
 
         private void OnValidate()
         {
-            _exitButton.onClick.AddListener(OnExitClick);
+            _exitButton = transform.Find("exit_button_value").GetComponent<Button>();
         }
     }
 }

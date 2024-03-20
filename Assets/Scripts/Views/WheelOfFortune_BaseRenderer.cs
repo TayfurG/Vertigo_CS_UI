@@ -19,11 +19,12 @@ namespace Views
         [SerializeField] private Image _wheelBaseImage;
         [SerializeField] private Image _wheelIndicatorImage;
         [SerializeField] private WheelOfFortune_Item_Renderer _itemPrefab;
-        [SerializeField] private Button _spinButton;
 
         [SerializeField] private float itemYOffset;
         [SerializeField] private float wheelRadiusOffset;
 
+        [SerializeField][HideInInspector] private Button _spinButton;
+        
         private RectTransform rectTransform;
         private WheelOfFortune_Model model;
 
@@ -175,17 +176,21 @@ namespace Views
 
         private void OnValidate()
         {
-            _spinButton.onClick.AddListener(OnSpinButton);
+            _spinButton = transform.Find("ui_spin_generic_button_value").GetComponent<Button>();
         }
 
-        private void Awake()
+        private void Start()
         {
+            _spinButton.onClick.AddListener(OnSpinButton);
+
             model.OnSpinTheWheel += OnSpinTheWheel;
             model.OnCanSpinAgain += OnCanSpinAgain;
         }
 
         private void OnDestroy()
         {
+            _spinButton.onClick.RemoveListener(OnSpinButton);
+
             model.OnSpinTheWheel -= OnSpinTheWheel;
             model.OnCanSpinAgain -= OnCanSpinAgain;
         }
